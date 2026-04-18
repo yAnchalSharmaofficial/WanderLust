@@ -25,8 +25,13 @@ module.exports.createListing = async (req,res) => {
     // geoJSON format=[longitude,latitude]
     const nominationUrl = `https://nominatim.openstreetmap.org/search?format=geojson&q=${encodeURIComponent(location)}`;
 
-    const response = await fetch(nominationUrl);
+    // const response = await fetch(nominationUrl);
     // const data = await response.json();
+    const response = await fetch(nominationUrl, {
+        headers: {
+            "User-Agent": "WanderLustApp/1.0 (anchalbasawa@gmail.com)"
+        }
+    });
     const data = await response.json().catch(() => null);
     let url= req.file.path;
     let filename= req.file.filename;

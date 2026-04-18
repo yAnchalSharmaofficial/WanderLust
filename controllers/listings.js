@@ -26,13 +26,15 @@ module.exports.createListing = async (req,res) => {
     const nominationUrl = `https://nominatim.openstreetmap.org/search?format=geojson&q=${encodeURIComponent(location)}`;
 
     const response = await fetch(nominationUrl);
-    const data = await response.json();
+    // const data = await response.json();
+    const data = await response.json().catch(() => null);
     let url= req.file.path;
     let filename= req.file.filename;
     const newListing = new Listing(req.body.listing);
     newListing.owner = req.user._id;
     newListing.image = {url, filename};
-    newListing.geometry = data.features[0].geometry;
+    // newListing.geometry = data.features[0].geometry;
+    newListing.geometry = data?.features?.[0]?.geometry;
     await newListing.save();
     req.flash("success","New Listing Created!");
     res.redirect("/listings");
